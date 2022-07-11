@@ -1,0 +1,10 @@
+<!--logs.wxml-->
+<view class="container">
+  <view class="content">
+    <view>{{titlezh}}</view>
+    <view>{{year}}</view>
+  </view>
+  <view wx:for="{{videosList}}" wx:key="created">
+    {{item.title}}
+  </view>
+</view>

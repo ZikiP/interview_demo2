@@ -1,49 +1,46 @@
 // index.ts
 // 获取应用实例
 const app = getApp<IAppOption>()
-
+export type ResponseType = {
+  data:{
+    ms:dataType
+    videos: Array<object>
+  }
+};
+export type dataType = {
+  titlezh: string,
+  year: number
+}
+// export type detailType = {
+//   title: Array<object>
+// }
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    canIUseGetUserProfile: false,
-    canIUseOpenData: wx.canIUse('open-data.type.userAvatarUrl') && wx.canIUse('open-data.type.userNickName') // 如需尝试获取用户信息可改为false
+    motto: 'Hello Wrld',
+    titlezh: '',
+    year: 123
   },
   // 事件处理函数
   bindViewTap() {
     wx.navigateTo({
-      url: '../logs/logs',
+      url: `../details/details?titlezh=${this.data.titlezh}&year=${this.data.year}`,
     })
   },
   onLoad() {
-    // @ts-ignore
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
-    }
-  },
-  getUserProfile() {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
+    const that = this;
+    wx.request({
+      url: 'https://api.ggt1024.com/mdb/v220601/GetMs',
+      data: {
+        "id":'1234511972993601536'
+      },
+      method:'POST', 
+      success(res:ResponseType) {
         console.log(res)
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
+        that.setData({
+          titlezh: res.data.ms.titlezh,
+          year: res.data.ms.year
         })
       }
     })
-  },
-  getUserInfo(e: any) {
-    // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
-    console.log(e)
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
-  }
+  } 
 })
